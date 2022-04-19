@@ -19,10 +19,10 @@ import pickle
 from joblib import dump, load
 clf = load('filename.joblib') 
 
-
+camera = int(input("camera number: "))
 
 # For webcam input:
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(camera)
 max_lines = 100000
 with mp_hands.Hands(
     model_complexity=0,
@@ -48,16 +48,18 @@ with mp_hands.Hands(
       for hand_landmarks in results.multi_hand_landmarks:
         
         lm = list(enumerate(hand_landmarks.landmark))
-        print(lm)
+        #print(lm)
         x_array = []
         y_array = []
+        z_array = []
         for value in lm:
           x_array.append(value[1].x)
           y_array.append(value[1].y)
+          z_array.append(value[1].z)
         
-        final_array = [*x_array, *y_array]
+        final_array = [*x_array, *y_array, *z_array]
 
-        print(clf.predict([final_array]))
+        print(time.time_ns(), clf.predict([final_array]))
 
         mp_drawing.draw_landmarks(
             image,
